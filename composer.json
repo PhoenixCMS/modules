@@ -3,8 +3,8 @@
     "description": "Modules extension for PhoenixCMS",
     "require": {
         "php": ">5.4.0",
-        "nette/di": "2.3.6",
-        "nette/caching": "2.4.2",
+        "nette/di": "~2.3.6",
+        "nette/caching": "~2.3.0",
         "phoenixcms/config": "dev-master",
         "phoenixcms/utils": "dev-master"
     },

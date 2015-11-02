@@ -9,7 +9,7 @@ namespace PhoenixCMS\Modules;
 use PhoenixCMS\Utils\HashMap;
 
 
-class Module implements IModule
+abstract class Module implements IModule
 {
 
 	/** @var HashMap */

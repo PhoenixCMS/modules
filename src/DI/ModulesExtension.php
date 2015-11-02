@@ -6,6 +6,8 @@
 namespace PhoenixCMS\Modules\DI;
 
 use Nette\DI\CompilerExtension;
+use PhoenixCMS\Modules\IModule;
+use PhoenixCMS\Modules\ModuleManager;
 
 
 class ModulesExtension extends CompilerExtension
@@ -19,7 +21,12 @@ class ModulesExtension extends CompilerExtension
 
 	public function beforeCompile()
 	{
-		//
+		$builder = $this->getContainerBuilder();
+		$modules = $builder->findByType(IModule::class);
+
+		foreach ($modules as $module) {
+			$module->addSetup('?->getService(?)->registerModule($service)', ['@container', $builder->getByType(ModuleManager::class)]);
+		}
 	}
 
 }

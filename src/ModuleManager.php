@@ -19,10 +19,10 @@ class ModuleManager
 	private $loader;
 
 	/** @var IModule[] */
-	private $modules;
+	private $modules = [];
 
 	/** @var ModuleException[] */
-	private $errors;
+	private $errors = [];
 
 
 	public function __construct(ILoader $loader)
@@ -38,9 +38,14 @@ class ModuleManager
 	{
 		try {
 			$module->initialize($this);
+			try {
+				Version::validate($module->getVersion());
+			} catch (InvalidVersionException $e) {
+				throw new ModuleException($e->getMessage(), $e->getCode(), $e);
+			}
 		} catch (ModuleException $e) {
 			$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
-			$this->errors[$identifier] = $e;
+			$this->errors[$identifier] = $e->setModule($module);
 			return;
 		}
 		$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
@@ -70,6 +75,15 @@ class ModuleManager
 
 
 	/**
+	 * @return Exceptions\ModuleException[]
+	 */
+	public function getErrors()
+	{
+		return $this->errors;
+	}
+
+
+	/**
 	 *
 	 */
 	public function prepareModules()
@@ -79,7 +93,7 @@ class ModuleManager
 				$module->beforeLoad();
 			} catch (ModuleException $e) {
 				$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
-				$this->errors[$identifier] = $e;
+				$this->errors[$identifier] = $e->setModule($module);
 				unset($this->modules[$identifier]);
 			}
 		}
@@ -135,7 +149,7 @@ class ModuleManager
 						}
 					} catch (ModuleDependencyException $e) {
 						$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
-						$this->errors[$identifier] = $e->getMessage();
+						$this->errors[$identifier] = $e->setModule($module);
 						unset ($this->modules[$identifier]);
 						$allClean = FALSE;
 					}

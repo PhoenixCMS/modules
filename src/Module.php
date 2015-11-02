@@ -6,7 +6,9 @@
 namespace PhoenixCMS\Modules;
 
 
+use Exception;
 use Nette\Reflection\ClassType;
+use PhoenixCMS\Modules\Exceptions\ModuleInitializeException;
 use PhoenixCMS\Utils\HashMap;
 
 
@@ -67,10 +69,15 @@ abstract class Module implements IModule
 
 	/**
 	 * @param ModuleManager $moduleManager
+	 * @throws ModuleInitializeException
 	 */
 	public function initialize(ModuleManager $moduleManager)
 	{
-		$this->config = $moduleManager->getConfigLoader()->load($this->getConfigFile());
+		try {
+			$this->config = $moduleManager->getConfigLoader()->load($this->getConfigFile());
+		} catch (Exception $e) {
+			throw new ModuleInitializeException('Unable to load configuration: ' . $e->getMessage(), $e->getCode(), $e);
+		}
 		$this->moduleManager = $moduleManager;
 	}
 

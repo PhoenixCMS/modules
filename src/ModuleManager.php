@@ -39,7 +39,7 @@ class ModuleManager
 		try {
 			$module->initialize($this);
 			try {
-				Version::validate($module->getVersion());
+				Version::parse($module->getVersion());
 			} catch (InvalidVersionException $e) {
 				throw new ModuleException($e->getMessage(), $e->getCode(), $e);
 			}

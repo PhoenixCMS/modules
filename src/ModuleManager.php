@@ -36,13 +36,14 @@ class ModuleManager
 	 */
 	public function registerModule(IModule $module)
 	{
-		$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
 		try {
 			$module->initialize($this);
 		} catch (ModuleException $e) {
+			$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
 			$this->errors[$identifier] = $e;
 			return;
 		}
+		$identifier = $this->getIdentifier($module->getVendor(), $module->getName());
 		$this->modules[$identifier] = $module;
 	}
 

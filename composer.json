@@ -5,6 +5,7 @@
         "php": ">5.4.0",
         "nette/di": "~2.3.6",
         "nette/caching": "~2.3.0",
+        "nette/reflection": "~2.3.0",
         "phoenixcms/config": "dev-master",
         "phoenixcms/utils": "dev-master"
     },

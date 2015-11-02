@@ -6,6 +6,7 @@
 namespace PhoenixCMS\Modules;
 
 
+use Nette\Reflection\ClassType;
 use PhoenixCMS\Utils\HashMap;
 
 
@@ -100,7 +101,8 @@ abstract class Module implements IModule
 	 */
 	protected function getConfigFile()
 	{
-		return __DIR__ . '/module.neon';
+		$reflection = ClassType::from($this);
+		return dirname($reflection->getFileName()) . '/module.neon';
 	}
 
 }
